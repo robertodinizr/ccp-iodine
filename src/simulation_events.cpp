@@ -89,15 +89,22 @@ void setup_events(Simulation& simulation) {
     struct AverageFieldAction : public Simulation::EventAction {
         spark::spatial::AverageGrid<2> av_electron_density;
         spark::spatial::AverageGrid<2> av_ion_density;
+        spark::spatial::AverageGrid<2> av_ion_i2_density;
+        spark::spatial::AverageGrid<2> av_ion_im_density;
+
         Parameters parameters_;
         explicit AverageFieldAction(const Parameters& parameters) : parameters_(parameters) {
             av_electron_density = spark::spatial::AverageGrid<2>({{parameters_.lx, parameters_.ly}, {parameters_.nx, parameters_.ny}});
             av_ion_density = spark::spatial::AverageGrid<2>({{parameters_.lx, parameters_.ly}, {parameters_.nx, parameters_.ny}});
+            av_ion_i2_density = spark::spatial::AverageGrid<2>({{parameters_.lx, parameters_.ly}, {parameters_.nx, parameters_.ny}});
+            av_ion_im_density = spark::spatial::AverageGrid<2>({{parameters_.lx, parameters_.ly}, {parameters_.nx, parameters_.ny}});
         }
         void notify(const Simulation::StateInterface& s) override {
             if (s.step() > parameters_.n_steps - parameters_.n_steps_avg) {
                 av_electron_density.add(s.electron_density());
                 av_ion_density.add(s.ion_density());
+                av_ion_i2_density.add(s.ion_density_i2());
+                av_ion_im_density.add(s.ion_density_im());
             }
         }
     };
@@ -116,10 +123,16 @@ void setup_events(Simulation& simulation) {
                 const auto avg_field_action_ptr = avg_field_action_.lock();
                 const auto& avg_e = avg_field_action_ptr->av_electron_density.get();
                 const auto& avg_i = avg_field_action_ptr->av_ion_density.get();
+                const auto& avg_i2 = avg_field_action_ptr->av_ion_i2_density.get();
+                const auto& avg_im = avg_field_action_ptr->av_ion_im_density.get();
                 auto density_e = count_to_density(parameters_.particle_weight, parameters_.dx, parameters_.dy, avg_e);
                 auto density_i = count_to_density(parameters_.particle_weight, parameters_.dx, parameters_.dy, avg_i);
+                auto density_i2 = count_to_density(parameters_.particle_weight, parameters_.dx, parameters_.dy, avg_i2);
+                auto density_im = count_to_density(parameters_.particle_weight, parameters_.dx, parameters_.dy, avg_im);
                 save_vec("density_e.txt", density_e, parameters_.nx, parameters_.ny);
                 save_vec("density_i.txt", density_i, parameters_.nx, parameters_.ny);
+                save_vec("density_i2.txt", density_i2, parameters_.nx, parameters_.ny);
+                save_vec("density_im.txt", density_im, parameters_.nx, parameters_.ny);
             }
         }
     };

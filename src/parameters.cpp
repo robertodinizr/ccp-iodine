@@ -6,7 +6,7 @@ void Parameters::fixed_parameters() {
     tg = 300.0; // neutral temperature (K)
     te = 30'000.0; // electron temperature (K)
     ti = 300.0; // ion temperature (K)
-    m_he = 6.67e-27; // ion mass (kg)
+    m_i = 126.90447 * 1.66053906892e-27; // ion mass (kg)
     m_e = 9.109e-31; // electron mass (kg)
     lx = 6.7e-2; // horizontal length (cm)
     f = 13.56e6; // frequency (Hz)

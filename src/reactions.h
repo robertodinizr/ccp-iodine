@@ -1,18 +1,57 @@
-#ifndef REACTIONS_H
-#define REACTIONS_H
+#include <spark/collisions/mcc.h>
 
 #include <filesystem>
 
-#include "spark/collisions/reaction.h"
-#include "parameters.h"
+namespace cross_section {
 
-namespace spark::reactions {
-spark::collisions::Reactions<2, 3> load_electron_reactions(const std::filesystem::path& dir,
-                                                        const Parameters& par,
-                                                        spark::particle::ChargedSpecies<2, 3>& ions);
+// Helium reactions
+std::shared_ptr<spark::collisions::Reactions<2, 3>> load_electron_reactions_helium(
+    const std::filesystem::path& dir,
+    double neutral_temperature,
+    spark::particle::ChargedSpecies<2, 3>* ions);
 
-spark::collisions::Reactions<2, 3> load_ion_reactions(const std::filesystem::path& dir,
-                                                   const Parameters& par);
-}  // namespace spark::reactions
+std::shared_ptr<spark::collisions::Reactions<2, 3>> load_ion_reactions_helium(
+    const std::filesystem::path& dir);
 
-#endif  // REACTIONS_H
+// Xenon reactions
+std::shared_ptr<spark::collisions::Reactions<2, 3>> load_electron_reactions_xenon(
+    const std::filesystem::path& dir,
+    double neutral_temperature,
+    spark::particle::ChargedSpecies<2, 3>* ions);
+std::shared_ptr<spark::collisions::Reactions<2, 3>> load_ion_reactions_xenon(
+    const std::filesystem::path& dir);
+
+// Iodine reactions
+std::shared_ptr<spark::collisions::Reactions<2, 3>> load_electron_reactions_iodine_1(
+    const std::filesystem::path& dir,
+    double neutral_temperature,
+    spark::particle::ChargedSpecies<2, 3>* i_ions);
+std::shared_ptr<spark::collisions::Reactions<2, 3>> load_electron_reactions_iodine_2(
+    const std::filesystem::path& dir,
+    double neutral_temperature,
+    spark::particle::ChargedSpecies<2, 3>* i2_ions,
+    spark::particle::ChargedSpecies<2, 3>* i_ions,
+    spark::particle::ChargedSpecies<2, 3>* in_ions);
+
+std::shared_ptr<spark::collisions::Reactions<2, 3>> load_atomic_ion_reactions_iodine_1(
+    const std::filesystem::path& dir,
+    double neutral_temperature,
+    spark::particle::ChargedSpecies<2, 3>* i_ions);
+
+std::shared_ptr<spark::collisions::Reactions<2, 3>> load_atomic_ion_reactions_iodine_2(
+    const std::filesystem::path& dir,
+    double neutral_temperature,
+    spark::particle::ChargedSpecies<2, 3>* i2_ions);
+
+std::shared_ptr<spark::collisions::Reactions<2, 3>> load_molecular_ion_reactions_iodine_1(
+    const std::filesystem::path& dir,
+    double neutral_temperature,
+    spark::particle::ChargedSpecies<2, 3>* i2_ions);
+
+std::shared_ptr<spark::collisions::Reactions<2, 3>> load_negative_ion_reactions_iodine_1(
+    const std::filesystem::path& dir);
+
+std::shared_ptr<spark::collisions::Reactions<2, 3>> load_negative_ion_reactions_iodine_2(
+    const std::filesystem::path& dir);
+
+}  // namespace cross_section

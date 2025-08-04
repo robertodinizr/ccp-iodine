@@ -19,7 +19,7 @@ struct Parameters {
     double te;
     double ti;
     double n0;
-    double m_he;
+    double m_i;
     double m_e;
     double volt;
     size_t ppc;
