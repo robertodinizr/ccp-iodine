@@ -203,13 +203,13 @@ spark::collisions::MCCReactionSet<2, 3> Simulation::load_electron_reactions_iodi
 
 spark::collisions::MCCReactionSet<2, 3> Simulation::load_electron_reactions_iodine_2() {
     auto electron_reactions_iodine2 = cross_section::load_electron_reactions_iodine_2(data_path_, parameters_.tg, &ions_i2_, &ions_, &ions_im_slow_);
-    spark::collisions::ReactionConfig<2, 3> i2_reaction_config{
+    spark::collisions::ReactionConfig<2, 3> electron_reaction_config_i2{
         .dt = parameters_.dt,
         .target = std::make_shared<spark::collisions::StaticUniformTarget<2, 3>>(parameters_.ng, parameters_.tg),
         .reactions = electron_reactions_iodine2,
         .dyn = spark::collisions::RelativeDynamics::FastProjectile
     };
-    return spark::collisions::MCCReactionSet(&ions_i2_, std::move(i2_reaction_config));
+    return spark::collisions::MCCReactionSet(&electrons_, std::move(electron_reaction_config_i2));
 }
 
 spark::collisions::MCCReactionSet<2, 3> Simulation::load_ion_collisions() {
@@ -225,35 +225,35 @@ spark::collisions::MCCReactionSet<2, 3> Simulation::load_ion_collisions() {
 
 spark::collisions::MCCReactionSet<2, 3> Simulation::load_ion_collisions_i2() {
     auto ion_reactions_iodine_i2 = cross_section::load_atomic_ion_reactions_iodine_2(data_path_, parameters_.tg, &ions_i2_);
-    spark::collisions::ReactionConfig<2, 3> ion_reaction_config{
+    spark::collisions::ReactionConfig<2, 3> ion_reaction_config_i2{
         .dt = parameters_.dt,
         .target = std::make_shared<spark::collisions::StaticUniformTarget<2, 3>>(parameters_.ng, parameters_.tg),
         .reactions = ion_reactions_iodine_i2,
         .dyn = spark::collisions::RelativeDynamics::SlowProjectile
     };
-    return spark::collisions::MCCReactionSet(&ions_i2_, std::move(ion_reaction_config));
+    return spark::collisions::MCCReactionSet(&ions_i2_, std::move(ion_reaction_config_i2));
 }
 
 spark::collisions::MCCReactionSet<2, 3> Simulation::load_ion_collisions_molecular() {
     auto ion_reactions_molecular = cross_section::load_molecular_ion_reactions_iodine_1(data_path_, parameters_.tg, &ions_i2_);
-    spark::collisions::ReactionConfig<2, 3> ion_reaction_config{
+    spark::collisions::ReactionConfig<2, 3> ion_reaction_config_molecular{
         .dt = parameters_.dt,
         .target = std::make_shared<spark::collisions::StaticUniformTarget<2, 3>>(parameters_.ng, parameters_.tg),
         .reactions = ion_reactions_molecular,
         .dyn = spark::collisions::RelativeDynamics::SlowProjectile
     };
-    return spark::collisions::MCCReactionSet(&ions_i2_, std::move(ion_reaction_config));
+    return spark::collisions::MCCReactionSet(&ions_i2_, std::move(ion_reaction_config_molecular));
 }
 
 spark::collisions::MCCReactionSet<2, 3> Simulation::load_ion_collisions_negative() {
     auto ion_reactions_negative = cross_section::load_negative_ion_reactions_iodine_1(data_path_);
-    spark::collisions::ReactionConfig<2, 3> ion_reaction_config{
+    spark::collisions::ReactionConfig<2, 3> ion_reaction_config_im{
         .dt = parameters_.dt,
         .target = std::make_shared<spark::collisions::StaticUniformTarget<2, 3>>(parameters_.ng, parameters_.tg),
         .reactions = ion_reactions_negative,
         .dyn = spark::collisions::RelativeDynamics::SlowProjectile
     };
-    return spark::collisions::MCCReactionSet(&ions_, std::move(ion_reaction_config));
+    return spark::collisions::MCCReactionSet(&ions_im_slow_, std::move(ion_reaction_config_im));
 }
 
 spark::collisions::MCCReactionSet<2, 3> Simulation::load_ion_collisions_negative_i2() {
@@ -264,7 +264,7 @@ spark::collisions::MCCReactionSet<2, 3> Simulation::load_ion_collisions_negative
         .reactions = ion_reactions_negative_i2,
         .dyn = spark::collisions::RelativeDynamics::SlowProjectile
     };
-    return spark::collisions::MCCReactionSet(&ions_, std::move(ion_reaction_config));
+    return spark::collisions::MCCReactionSet(&ions_im_slow_, std::move(ion_reaction_config));
 }
 
 
