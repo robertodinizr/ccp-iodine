@@ -31,7 +31,7 @@ spark::Parameters get_case_parameters(int case_number) {
 
 int main(int argc, char* argv[]) {
     spark::random::initialize(500);
-    argparse::ArgumentParser args("spark-benchmark");
+    argparse::ArgumentParser args("ccp-iodine");
 
     int case_number = 0;
     args.add_argument("case_number")

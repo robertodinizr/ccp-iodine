@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(spark-benchmark)
+project(ccp-iodine)
 
 set(CMAKE_CXX_STANDARD 20)
 set(FETCHCONTENT_QUIET OFF CACHE BOOL "" FORCE)
@@ -34,17 +34,17 @@ set(SOURCES
     src/simulation_events.cpp
 )
 
-add_executable(spark-benchmark ${SOURCES})
-set_property(TARGET spark-benchmark PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
+add_executable(ccp-iodine ${SOURCES})
+set_property(TARGET ccp-iodine PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
 
-target_include_directories(spark-benchmark PUBLIC
+target_include_directories(ccp-iodine PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${CMAKE_CURRENT_SOURCE_DIR}/spark/include
     ${argparse_SOURCE_DIR}/include
     ${rapidcsv_SOURCE_DIR}/src
 )
 
-target_link_libraries(spark-benchmark PUBLIC
+target_link_libraries(ccp-iodine PUBLIC
     spark
     HYPRE
     rapidcsv
