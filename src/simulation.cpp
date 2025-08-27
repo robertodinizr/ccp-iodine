@@ -153,6 +153,9 @@ void Simulation::set_initial_conditions() {
         maxwellian_emitter(parameters_.te, parameters_.lx, parameters_.ly, spark::constants::m_e));
 
     ions_ = spark::particle::ChargedSpecies<2, 3>(spark::constants::e, parameters_.m_i);
+    ions_.add(
+        0.0,
+        maxwellian_emitter(parameters_.ti, parameters_.lx, parameters_.ly, parameters_.m_i));
 
     ions_i2_ = spark::particle::ChargedSpecies<2, 3>(spark::constants::e, 2.0 * parameters_.m_i);
     ions_i2_.add(
@@ -160,7 +163,9 @@ void Simulation::set_initial_conditions() {
         maxwellian_emitter(parameters_.ti, parameters_.lx, parameters_.ly, 2.0 * parameters_.m_i));
         
     ions_im_slow_ = spark::particle::ChargedSpecies<2, 3>(-spark::constants::e, parameters_.m_i);
-    ions_im_slow_.add(0.0);
+    ions_im_slow_.add(
+        0.0,
+        maxwellian_emitter(parameters_.ti, parameters_.lx, parameters_.ly, parameters_.m_i));
 
     electron_density_ = spark::spatial::UniformGrid<2>({parameters_.lx, parameters_.ly},
                                                       {parameters_.nx, parameters_.ny});
