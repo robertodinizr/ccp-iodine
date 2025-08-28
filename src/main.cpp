@@ -1,7 +1,8 @@
 #include <argparse/argparse.hpp>
 #include <cstdio>
 #include <string>
-
+#include <algorithm>
+#include <filesystem>
 #include "spark/random/random.h"
 #include "simulation.h"
 #include "simulation_events.h"
@@ -48,6 +49,12 @@ int main(int argc, char* argv[]) {
         .store_into(data_path);
 
     args.parse_args(argc, argv);
+
+    std::replace(data_path.begin(), data_path.end(), '\\', '/');
+    std::filesystem::path data_dir = std::filesystem::path(data_path);
+    if (!data_dir.is_absolute()) data_dir = std::filesystem::current_path() / data_dir;
+    data_dir = data_dir.lexically_normal();
+    data_path = data_dir.string();
 
     printf("Starting benchmark case %d simulation\n", case_number);
     printf("Data path set to %s\n", data_path.c_str());

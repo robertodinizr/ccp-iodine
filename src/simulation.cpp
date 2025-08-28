@@ -27,6 +27,16 @@ namespace {
                  spark::random::normal(0.0, vth)};
         };
     }
+
+    auto maxwellian_emitter_iodine(double t, double lx, double ly, double m) {
+        return [t, lx, ly, m](spark::core::Vec<3>& v, spark::core::Vec<2>& x) {
+            x.x = lx * spark::random::uniform();
+            x.y = ly * spark::random::uniform();
+            double vth = std::sqrt((spark::constants::kb * t * 8) / (spark::constants::pi * m));
+            v = {spark::random::normal(0.0, vth), spark::random::normal(0.0, vth),
+                 spark::random::normal(0.0, vth)};
+        };
+    }
 } // namespace
 
 namespace spark {
@@ -138,7 +148,7 @@ void Simulation::reduce_rho() {
     auto* ni_im = ion_density_im_.data_ptr();
 
     for (size_t i = 0; i < rho_field_.n_total(); ++i) {
-        rho_ptr[i] = k * (ni[i] + ni_i2[i] - ni_im[i] - ne[i]);
+        rho_ptr[i] = k * (ni[i] + ni_i2[i] + ni_im[i] - ne[i]);
     }
 }
 
@@ -154,18 +164,18 @@ void Simulation::set_initial_conditions() {
 
     ions_ = spark::particle::ChargedSpecies<2, 3>(spark::constants::e, parameters_.m_i);
     ions_.add(
-        0.0,
-        maxwellian_emitter(parameters_.ti, parameters_.lx, parameters_.ly, parameters_.m_i));
+        parameters_.n_initial,
+        maxwellian_emitter_iodine(parameters_.ti, parameters_.lx, parameters_.ly, parameters_.m_i));
 
     ions_i2_ = spark::particle::ChargedSpecies<2, 3>(spark::constants::e, 2.0 * parameters_.m_i);
     ions_i2_.add(
         parameters_.n_initial,
-        maxwellian_emitter(parameters_.ti, parameters_.lx, parameters_.ly, 2.0 * parameters_.m_i));
+        maxwellian_emitter_iodine(parameters_.ti, parameters_.lx, parameters_.ly, 2.0 * parameters_.m_i));
         
     ions_im_slow_ = spark::particle::ChargedSpecies<2, 3>(-spark::constants::e, parameters_.m_i);
     ions_im_slow_.add(
         0.0,
-        maxwellian_emitter(parameters_.ti, parameters_.lx, parameters_.ly, parameters_.m_i));
+        maxwellian_emitter_iodine(parameters_.ti, parameters_.lx, parameters_.ly, parameters_.m_i));
 
     electron_density_ = spark::spatial::UniformGrid<2>({parameters_.lx, parameters_.ly},
                                                       {parameters_.nx, parameters_.ny});
